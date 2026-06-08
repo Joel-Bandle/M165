@@ -1,0 +1,86 @@
+-- KN-C-02 Teil A: Daten hinzufuegen
+-- Thema: Filme & Serien
+-- WICHTIG: Zuerst ausfuehren: USE filme_db;
+
+USE filme_db;
+
+-- =============================================
+-- Tabelle: filme_nach_titel
+-- Mehrere Datensaetze pro Partition (gleicher titel, anderes Jahr = Remakes)
+-- Zusaetzliche neue Filme
+-- =============================================
+
+INSERT INTO filme_nach_titel (titel, erscheinungsjahr, genre, typ, bewertung, regisseur_name, regisseur_nat)
+VALUES ('Interstellar', 2014, 'Sci-Fi', 'Kino', 8.6, 'Christopher Nolan', 'Britisch');
+
+INSERT INTO filme_nach_titel (titel, erscheinungsjahr, genre, typ, bewertung, regisseur_name, regisseur_nat)
+VALUES ('Inception', 2010, 'Sci-Fi', 'Kino', 8.8, 'Christopher Nolan', 'Britisch');
+
+INSERT INTO filme_nach_titel (titel, erscheinungsjahr, genre, typ, bewertung, regisseur_name, regisseur_nat)
+VALUES ('Dune', 2021, 'Sci-Fi', 'Kino', 8.0, 'Denis Villeneuve', 'Kanadisch');
+
+INSERT INTO filme_nach_titel (titel, erscheinungsjahr, genre, typ, bewertung, regisseur_name, regisseur_nat)
+VALUES ('The Irishman', 2019, 'Biografie', 'Kino', 7.8, 'Martin Scorsese', 'Amerikanisch');
+
+INSERT INTO filme_nach_titel (titel, erscheinungsjahr, genre, typ, bewertung, regisseur_name, regisseur_nat)
+VALUES ('Okja', 2017, 'Drama', 'Streaming', 7.3, 'Bong Joon-ho', 'Suedkoreanisch');
+
+-- =============================================
+-- Tabelle: filme_nach_genre
+-- Mehrere Datensaetze pro Partition (gleicher genre)
+-- =============================================
+
+INSERT INTO filme_nach_genre (genre, bewertung, titel, erscheinungsjahr, typ, regisseur_name)
+VALUES ('Sci-Fi', 8.8, 'Inception', 2010, 'Kino', 'Christopher Nolan');
+
+INSERT INTO filme_nach_genre (genre, bewertung, titel, erscheinungsjahr, typ, regisseur_name)
+VALUES ('Sci-Fi', 8.6, 'Interstellar', 2014, 'Kino', 'Christopher Nolan');
+
+INSERT INTO filme_nach_genre (genre, bewertung, titel, erscheinungsjahr, typ, regisseur_name)
+VALUES ('Sci-Fi', 8.0, 'Dune', 2021, 'Kino', 'Denis Villeneuve');
+
+INSERT INTO filme_nach_genre (genre, bewertung, titel, erscheinungsjahr, typ, regisseur_name)
+VALUES ('Biografie', 7.8, 'The Irishman', 2019, 'Kino', 'Martin Scorsese');
+
+INSERT INTO filme_nach_genre (genre, bewertung, titel, erscheinungsjahr, typ, regisseur_name)
+VALUES ('Drama', 7.3, 'Okja', 2017, 'Streaming', 'Bong Joon-ho');
+
+-- =============================================
+-- Tabelle: filme_nach_schauspieler
+-- Mehrere Datensaetze pro Partition (gleicher Schauspieler, mehrere Filme)
+-- =============================================
+
+INSERT INTO filme_nach_schauspieler (schauspieler_name, erscheinungsjahr, titel, genre, bewertung, rolle)
+VALUES ('Leonardo DiCaprio', 2010, 'Inception', 'Sci-Fi', 8.8, 'Dom Cobb');
+
+INSERT INTO filme_nach_schauspieler (schauspieler_name, erscheinungsjahr, titel, genre, bewertung, rolle)
+VALUES ('Cillian Murphy', 2010, 'Inception', 'Sci-Fi', 8.8, 'Robert Fischer');
+
+INSERT INTO filme_nach_schauspieler (schauspieler_name, erscheinungsjahr, titel, genre, bewertung, rolle)
+VALUES ('Timothee Chalamet', 2021, 'Dune', 'Sci-Fi', 8.0, 'Paul Atreides');
+
+INSERT INTO filme_nach_schauspieler (schauspieler_name, erscheinungsjahr, titel, genre, bewertung, rolle)
+VALUES ('Song Kang-ho', 2017, 'Okja', 'Drama', 7.3, 'Choi Woo-sik');
+
+INSERT INTO filme_nach_schauspieler (schauspieler_name, erscheinungsjahr, titel, genre, bewertung, rolle)
+VALUES ('Leonardo DiCaprio', 2019, 'The Irishman', 'Biografie', 7.8, 'Cameo');
+
+-- =============================================
+-- Tabelle: filme_nach_plattform
+-- Mehrere Datensaetze pro Partition (gleiche Plattform, mehrere Filme)
+-- =============================================
+
+INSERT INTO filme_nach_plattform (plattform_name, genre, titel, erscheinungsjahr, bewertung, plattform_typ, plattform_preis)
+VALUES ('Netflix', 'Sci-Fi', 'Inception', 2010, 8.8, 'Streaming', 19.90);
+
+INSERT INTO filme_nach_plattform (plattform_name, genre, titel, erscheinungsjahr, bewertung, plattform_typ, plattform_preis)
+VALUES ('Netflix', 'Sci-Fi', 'Interstellar', 2014, 8.6, 'Streaming', 19.90);
+
+INSERT INTO filme_nach_plattform (plattform_name, genre, titel, erscheinungsjahr, bewertung, plattform_typ, plattform_preis)
+VALUES ('Netflix', 'Drama', 'Okja', 2017, 7.3, 'Streaming', 19.90);
+
+INSERT INTO filme_nach_plattform (plattform_name, genre, titel, erscheinungsjahr, bewertung, plattform_typ, plattform_preis)
+VALUES ('Amazon Prime Video', 'Sci-Fi', 'Interstellar', 2014, 8.6, 'Streaming', 8.99);
+
+INSERT INTO filme_nach_plattform (plattform_name, genre, titel, erscheinungsjahr, bewertung, plattform_typ, plattform_preis)
+VALUES ('Apple TV+', 'Sci-Fi', 'Dune', 2021, 8.0, 'Streaming', 9.99);

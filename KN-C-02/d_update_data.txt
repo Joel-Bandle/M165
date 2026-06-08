@@ -1,0 +1,90 @@
+-- KN-C-02 Teil D: Daten veraendern
+-- Thema: Filme & Serien
+-- WICHTIG: Zuerst ausfuehren: USE filme_db;
+
+USE filme_db;
+
+-- =============================================
+-- U1: Bewertung eines Films auf mehreren Tabellen aktualisieren
+-- Szenario: Nach einer Neubewertung durch die Redaktion erhaelt "Barbie"
+-- eine hoehere Bewertung von 7.2 auf 7.8. Da die Bewertung in zwei Tabellen
+-- gespeichert ist (filme_nach_titel und filme_nach_genre), muss sie in
+-- beiden aktualisiert werden. In filme_nach_genre ist bewertung ein
+-- Clustering Key und kann nicht direkt geaendert werden — der alte
+-- Eintrag muss geloescht und neu eingefuegt werden.
+-- =============================================
+
+-- Schritt 1: Bewertung in filme_nach_titel aktualisieren
+UPDATE filme_nach_titel
+SET bewertung = 7.8
+WHERE titel = 'Barbie'
+AND erscheinungsjahr = 2023;
+
+-- Schritt 2: In filme_nach_genre alten Eintrag loeschen (Clustering Key!)
+DELETE FROM filme_nach_genre
+WHERE genre = 'Satire-Komoedie'
+AND bewertung = 7.2
+AND titel = 'Barbie';
+
+-- Schritt 3: Neuen Eintrag mit aktualisierter Bewertung einfuegen
+INSERT INTO filme_nach_genre (genre, bewertung, titel, erscheinungsjahr, typ, regisseur_name)
+VALUES ('Satire-Komoedie', 7.8, 'Barbie', 2023, 'Kino', 'Greta Gerwig');
+
+-- Kontrolle
+SELECT titel, bewertung FROM filme_nach_titel WHERE titel = 'Barbie';
+SELECT titel, bewertung FROM filme_nach_genre WHERE genre = 'Satire-Komoedie';
+
+-- =============================================
+-- U2: Plattformpreis erhoehen
+-- Szenario: Netflix erhoht seinen Preis von 19.90 auf 21.90 CHF.
+-- Da plattform_preis eine normale Spalte ist, kann sie direkt mit
+-- UPDATE gesetzt werden — fuer jeden Film-Eintrag auf Netflix einzeln.
+-- =============================================
+
+UPDATE filme_nach_plattform
+SET plattform_preis = 21.90
+WHERE plattform_name = 'Netflix'
+AND genre = 'Historisches Drama'
+AND titel = 'Oppenheimer';
+
+UPDATE filme_nach_plattform
+SET plattform_preis = 21.90
+WHERE plattform_name = 'Netflix'
+AND genre = 'Satire-Komoedie'
+AND titel = 'Barbie';
+
+UPDATE filme_nach_plattform
+SET plattform_preis = 21.90
+WHERE plattform_name = 'Netflix'
+AND genre = 'Biografie'
+AND titel = 'The Wolf of Wall Street';
+
+UPDATE filme_nach_plattform
+SET plattform_preis = 21.90
+WHERE plattform_name = 'Netflix'
+AND genre = 'Thriller'
+AND titel = 'Parasite';
+
+-- Kontrolle
+SELECT titel, plattform_name, plattform_preis
+FROM filme_nach_plattform
+WHERE plattform_name = 'Netflix';
+
+-- =============================================
+-- U3: Rolle eines Schauspielers korrigieren
+-- Szenario: Es wurde festgestellt, dass die Rolle von Cillian Murphy
+-- in Inception falsch erfasst wurde. Sie wird von "Robert Fischer"
+-- auf "Robert Michael Fischer" korrigiert. Da "rolle" eine normale
+-- Spalte auf der Kante ist, kann sie direkt mit UPDATE geaendert werden.
+-- =============================================
+
+UPDATE filme_nach_schauspieler
+SET rolle = 'Robert Michael Fischer'
+WHERE schauspieler_name = 'Cillian Murphy'
+AND erscheinungsjahr = 2010
+AND titel = 'Inception';
+
+-- Kontrolle
+SELECT schauspieler_name, titel, rolle
+FROM filme_nach_schauspieler
+WHERE schauspieler_name = 'Cillian Murphy';

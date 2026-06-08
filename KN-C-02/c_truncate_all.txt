@@ -1,0 +1,21 @@
+-- KN-C-02 Teil C: Alle Daten loeschen (Aufraeumen)
+-- Thema: Filme & Serien
+-- WICHTIG: Zuerst ausfuehren: USE filme_db;
+-- Dieses Script loescht alle Daten aus allen Tabellen,
+-- laesst aber die Tabellenstruktur bestehen.
+
+USE filme_db;
+
+TRUNCATE filme_nach_titel;
+
+TRUNCATE filme_nach_genre;
+
+TRUNCATE filme_nach_schauspieler;
+
+TRUNCATE filme_nach_plattform;
+
+-- Kontrolle: Alle Tabellen sollten leer sein
+SELECT COUNT(*) FROM filme_nach_titel;
+SELECT COUNT(*) FROM filme_nach_genre;
+SELECT COUNT(*) FROM filme_nach_schauspieler;
+SELECT COUNT(*) FROM filme_nach_plattform;

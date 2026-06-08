@@ -1,0 +1,44 @@
+-- KN-C-02 Teil C: Daten loeschen
+-- Thema: Filme & Serien
+-- WICHTIG: Zuerst ausfuehren: USE filme_db;
+
+USE filme_db;
+
+-- =============================================
+-- 1) Einzelne Zeile loeschen mit Partition Key + Clustering Key
+--    Loescht nur "Okja" aus filme_nach_genre (Partition: Drama)
+-- =============================================
+
+DELETE FROM filme_nach_genre
+WHERE genre = 'Drama'
+AND bewertung = 7.3
+AND titel = 'Okja';
+
+-- Kontrolle: Drama sollte jetzt leer sein
+SELECT * FROM filme_nach_genre WHERE genre = 'Drama';
+
+-- =============================================
+-- 2) Spalte einer einzelnen Zeile loeschen (DELETE auf Spalte)
+--    Loescht nur die Spalte "regisseur_nat" von Interstellar
+-- =============================================
+
+DELETE regisseur_nat FROM filme_nach_titel
+WHERE titel = 'Interstellar'
+AND erscheinungsjahr = 2014;
+
+-- Kontrolle: regisseur_nat sollte NULL sein
+SELECT titel, erscheinungsjahr, regisseur_name, regisseur_nat
+FROM filme_nach_titel
+WHERE titel = 'Interstellar';
+
+-- =============================================
+-- 3) Alle Filme eines Schauspielers loeschen (ganze Partition)
+--    Loescht alle Eintraege von "Song Kang-ho"
+-- =============================================
+
+DELETE FROM filme_nach_schauspieler
+WHERE schauspieler_name = 'Song Kang-ho';
+
+-- Kontrolle: Song Kang-ho sollte keine Eintraege mehr haben
+SELECT * FROM filme_nach_schauspieler
+WHERE schauspieler_name = 'Song Kang-ho';

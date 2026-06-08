@@ -1,0 +1,60 @@
+-- KN-C-02 Teil B: Daten abfragen
+-- Thema: Filme & Serien
+-- WICHTIG: Zuerst ausfuehren: USE filme_db;
+
+USE filme_db;
+
+-- =============================================
+-- Screen 1: Filmdetail-Seite
+-- Alle Details eines Films anhand des Titels anzeigen
+-- =============================================
+
+SELECT * FROM filme_nach_titel
+WHERE titel = 'Oppenheimer';
+
+-- =============================================
+-- Screen 2: Genre-Browsing
+-- Alle Sci-Fi Filme anzeigen, sortiert nach Bewertung (beste zuerst)
+-- =============================================
+
+SELECT titel, bewertung, erscheinungsjahr, regisseur_name
+FROM filme_nach_genre
+WHERE genre = 'Sci-Fi';
+
+-- =============================================
+-- Screen 2b: Genre-Browsing mit Clustering Key Filter
+-- Nur Sci-Fi Filme mit Bewertung hoeer als 8.5
+-- =============================================
+
+SELECT titel, bewertung, erscheinungsjahr
+FROM filme_nach_genre
+WHERE genre = 'Sci-Fi'
+AND bewertung > 8.5;
+
+-- =============================================
+-- Screen 3: Schauspieler-Profilseite
+-- Alle Filme von Leonardo DiCaprio anzeigen
+-- =============================================
+
+SELECT titel, erscheinungsjahr, rolle, bewertung
+FROM filme_nach_schauspieler
+WHERE schauspieler_name = 'Leonardo DiCaprio';
+
+-- =============================================
+-- Screen 4: Plattform-Uebersichtsseite
+-- Alle Filme auf Netflix anzeigen, gruppiert nach Genre
+-- =============================================
+
+SELECT genre, titel, erscheinungsjahr, bewertung
+FROM filme_nach_plattform
+WHERE plattform_name = 'Netflix';
+
+-- =============================================
+-- Screen 4b: Plattform-Filter mit Genre
+-- Nur Sci-Fi Filme auf Netflix
+-- =============================================
+
+SELECT titel, erscheinungsjahr, bewertung
+FROM filme_nach_plattform
+WHERE plattform_name = 'Netflix'
+AND genre = 'Sci-Fi';
