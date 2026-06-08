@@ -1,0 +1,45 @@
+// KN-N-02 Teil C: Daten loeschen
+
+// =============================================
+// 1) DELETE ohne DETACH — fuehrt zu einem Fehler
+// =============================================
+
+// Vorher pruefen: Welche Beziehungen hat der Regisseur "Greta Gerwig"?
+MATCH (r:Regisseur {name: "Greta Gerwig"})-[rel]-()
+RETURN type(rel) AS beziehung, rel
+
+// Versuch: Greta Gerwig loeschen, obwohl sie noch eine :INSZENIERT-Beziehung hat
+MATCH (r:Regisseur {name: "Greta Gerwig"})
+DELETE r
+
+// Erwarteter Fehler:
+// Cannot delete node<id>, because it still has relationships.
+// To delete this node, you must first delete its relationships,
+// or alternatively use DETACH DELETE to delete the node and its relationships.
+//
+// Neo4j erlaubt es NICHT, einen Knoten zu loeschen, der noch Kanten hat.
+// Man muesste zuerst alle Kanten manuell loeschen, bevor der Knoten entfernt
+// werden kann.
+
+
+// =============================================
+// 2) DETACH DELETE — loescht Knoten MIT allen Beziehungen
+// =============================================
+
+// Vorher pruefen: Alle Beziehungen von Greta Gerwig (1x INSZENIERT)
+MATCH (r:Regisseur {name: "Greta Gerwig"})-[rel]-()
+RETURN type(rel) AS beziehung, rel
+
+// Jetzt mit DETACH DELETE loeschen:
+MATCH (r:Regisseur {name: "Greta Gerwig"})
+DETACH DELETE r
+
+// Nachher pruefen: Greta Gerwig existiert nicht mehr
+MATCH (r:Regisseur {name: "Greta Gerwig"})
+RETURN r
+
+// DETACH DELETE entfernt automatisch ALLE Kanten des Knotens (hier: INSZENIERT)
+// und danach den Knoten selbst — in einem einzigen Statement.
+// Ohne DETACH muesste man zuerst separat die Kante loeschen:
+//   MATCH (r:Regisseur {name: "Greta Gerwig"})-[rel]-() DELETE rel
+//   MATCH (r:Regisseur {name: "Greta Gerwig"}) DELETE r

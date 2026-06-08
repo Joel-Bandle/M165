@@ -1,0 +1,73 @@
+// KN-N-02 Teil A: Daten hinzufuegen
+// Alle Knoten und Beziehungen in einem einzigen CREATE-Statement
+
+CREATE
+
+// =============================================
+// REGISSEURE (5 Stueck)
+// =============================================
+(r1:Regisseur {name: "Christopher Nolan", nationalitaet: "Britisch", geburtsdatum: date("1970-07-30")}),
+(r2:Regisseur {name: "Denis Villeneuve", nationalitaet: "Kanadisch", geburtsdatum: date("1967-10-03")}),
+(r3:Regisseur {name: "Greta Gerwig", nationalitaet: "Amerikanisch", geburtsdatum: date("1983-08-04")}),
+(r4:Regisseur {name: "Martin Scorsese", nationalitaet: "Amerikanisch", geburtsdatum: date("1942-11-17")}),
+(r5:Regisseur {name: "Bong Joon-ho", nationalitaet: "Suedkoreanisch", geburtsdatum: date("1969-09-14")}),
+
+// =============================================
+// SCHAUSPIELER (5 Stueck)
+// =============================================
+(s1:Schauspieler {name: "Cillian Murphy", nationalitaet: "Irisch", geburtsdatum: date("1976-05-25")}),
+(s2:Schauspieler {name: "Timothee Chalamet", nationalitaet: "Amerikanisch", geburtsdatum: date("1995-12-27")}),
+(s3:Schauspieler {name: "Margot Robbie", nationalitaet: "Australisch", geburtsdatum: date("1990-07-02")}),
+(s4:Schauspieler {name: "Leonardo DiCaprio", nationalitaet: "Amerikanisch", geburtsdatum: date("1974-11-11")}),
+(s5:Schauspieler {name: "Song Kang-ho", nationalitaet: "Suedkoreanisch", geburtsdatum: date("1967-01-17")}),
+
+// =============================================
+// FILME (5 Stueck)
+// =============================================
+(f1:Film {titel: "Oppenheimer", erscheinungsjahr: 2023, genre: "Historisches Drama", typ: "Kino", bewertung: 8.9}),
+(f2:Film {titel: "Dune: Part Two", erscheinungsjahr: 2024, genre: "Science-Fiction", typ: "Kino", bewertung: 8.7}),
+(f3:Film {titel: "Barbie", erscheinungsjahr: 2023, genre: "Komoedie", typ: "Kino", bewertung: 6.9}),
+(f4:Film {titel: "The Wolf of Wall Street", erscheinungsjahr: 2013, genre: "Biografie", typ: "Kino", bewertung: 8.2}),
+(f5:Film {titel: "Parasite", erscheinungsjahr: 2019, genre: "Thriller", typ: "Kino", bewertung: 8.5}),
+
+// =============================================
+// PLATTFORMEN (4 Stueck)
+// =============================================
+(p1:Plattform {name: "Netflix", typ: "Streaming", preis: 17.90}),
+(p2:Plattform {name: "Amazon Prime Video", typ: "Streaming", preis: 8.99}),
+(p3:Plattform {name: "Apple TV+", typ: "Streaming", preis: 9.99}),
+(p4:Plattform {name: "Disney+", typ: "Streaming", preis: 11.99}),
+
+// =============================================
+// BEZIEHUNGEN: :INSZENIERT (Regisseur -> Film)
+// =============================================
+(r1)-[:INSZENIERT]->(f1),
+(r2)-[:INSZENIERT]->(f2),
+(r3)-[:INSZENIERT]->(f3),
+(r4)-[:INSZENIERT]->(f4),
+(r5)-[:INSZENIERT]->(f5),
+
+// =============================================
+// BEZIEHUNGEN: :SPIELT_IN (Schauspieler -> Film) mit rolle + gage
+// =============================================
+(s1)-[:SPIELT_IN {rolle: "J. Robert Oppenheimer", gage: 20000000.00}]->(f1),
+(s2)-[:SPIELT_IN {rolle: "Paul Atreides", gage: 12500000.00}]->(f2),
+(s3)-[:SPIELT_IN {rolle: "Barbie", gage: 15000000.00}]->(f3),
+(s4)-[:SPIELT_IN {rolle: "Jordan Belfort", gage: 25000000.00}]->(f4),
+(s5)-[:SPIELT_IN {rolle: "Ki-taek", gage: 3000000.00}]->(f5),
+(s4)-[:SPIELT_IN {rolle: "Nebenrolle: Reporter", gage: 500000.00}]->(f2),
+(s3)-[:SPIELT_IN {rolle: "Naomi Lapaglia", gage: 10000000.00}]->(f4),
+
+// =============================================
+// BEZIEHUNGEN: :VERFUEGBAR_AUF (Film -> Plattform)
+// =============================================
+(f1)-[:VERFUEGBAR_AUF]->(p1),
+(f1)-[:VERFUEGBAR_AUF]->(p2),
+(f2)-[:VERFUEGBAR_AUF]->(p3),
+(f3)-[:VERFUEGBAR_AUF]->(p1),
+(f3)-[:VERFUEGBAR_AUF]->(p4),
+(f4)-[:VERFUEGBAR_AUF]->(p1),
+(f4)-[:VERFUEGBAR_AUF]->(p2),
+(f5)-[:VERFUEGBAR_AUF]->(p1),
+(f5)-[:VERFUEGBAR_AUF]->(p2),
+(f5)-[:VERFUEGBAR_AUF]->(p3)

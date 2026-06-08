@@ -1,0 +1,44 @@
+// KN-N-02 Teil D: Daten veraendern
+
+// =============================================
+// U1: Bewertung und Genre eines Films aktualisieren (SET auf Knoten)
+// =============================================
+// Szenario: Nach einer Neubewertung durch die Redaktion wird "Barbie"
+// neu eingestuft — die Bewertung steigt auf 7.2 und das Genre wird praezisiert.
+
+MATCH (f:Film {titel: "Barbie"})
+SET f.bewertung = 7.2, f.genre = "Satire-Komoedie"
+RETURN f.titel, f.bewertung, f.genre
+
+// Kontrolle:
+MATCH (f:Film {titel: "Barbie"})
+RETURN f.titel, f.bewertung, f.genre
+
+
+// =============================================
+// U2: Preis einer Streaming-Plattform erhoehen (SET auf Knoten-Attribut)
+// =============================================
+// Szenario: Netflix erhoht seinen Abo-Preis — von 17.90 auf 19.90 CHF.
+
+MATCH (p:Plattform {name: "Netflix"})
+SET p.preis = 19.90
+RETURN p.name, p.preis
+
+// Kontrolle:
+MATCH (p:Plattform {name: "Netflix"})
+RETURN p.name, p.preis
+
+
+// =============================================
+// U3: Gage eines Schauspielers in einem bestimmten Film anpassen (SET auf Kante)
+// =============================================
+// Szenario: Nach Nachverhandlungen erhaelt Leonardo DiCaprio fuer seine Rolle
+// in "The Wolf of Wall Street" eine rueckwirkende Erhoehung auf 30 Mio.
+
+MATCH (s:Schauspieler {name: "Leonardo DiCaprio"})-[sp:SPIELT_IN]->(f:Film {titel: "The Wolf of Wall Street"})
+SET sp.gage = 30000000.00
+RETURN s.name, f.titel, sp.rolle, sp.gage
+
+// Kontrolle:
+MATCH (s:Schauspieler {name: "Leonardo DiCaprio"})-[sp:SPIELT_IN]->(f:Film {titel: "The Wolf of Wall Street"})
+RETURN s.name, f.titel, sp.rolle, sp.gage

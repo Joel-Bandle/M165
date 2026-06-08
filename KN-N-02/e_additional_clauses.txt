@@ -1,0 +1,59 @@
+// KN-N-02 Teil E: Zusaetzliche Klauseln
+
+// =============================================
+// 1) LIMIT — Anzahl der Ergebnisse begrenzen
+// =============================================
+
+// Erklaerung:
+// LIMIT schneidet das Ergebnis einer Abfrage nach einer bestimmten Anzahl
+// von Zeilen ab. Es wird immer AM ENDE eines Statements angehaengt, nach
+// ORDER BY (falls vorhanden). LIMIT ist nuetzlich, wenn man z.B. nur die
+// "Top N"-Eintraege sehen will, oder wenn die Datenmenge sehr gross ist und
+// man nur eine Vorschau braucht.
+// In Kombination mit ORDER BY ergibt LIMIT einen "Top-N"-Filter.
+// Ohne ORDER BY ist die Reihenfolge nicht garantiert — man bekommt irgendwelche
+// N Ergebnisse, nicht unbedingt die "besten".
+
+// Beispiel: Die 3 am hoechsten bewerteten Filme anzeigen
+MATCH (f:Film)
+RETURN f.titel, f.bewertung, f.genre
+ORDER BY f.bewertung DESC
+LIMIT 3
+
+// Erklaerung des Beispiels:
+// 1. MATCH (f:Film) findet alle Film-Knoten.
+// 2. ORDER BY f.bewertung DESC sortiert sie absteigend nach Bewertung.
+// 3. LIMIT 3 gibt nur die ersten 3 Ergebnisse zurueck (also die 3 besten).
+// Ohne ORDER BY wuerden irgendwelche 3 Filme zurueckgegeben.
+
+
+// =============================================
+// 2) UNWIND — Liste in einzelne Zeilen aufloesen
+// =============================================
+
+// Erklaerung:
+// UNWIND nimmt eine Liste (Array) und "entfaltet" sie — jedes Element der Liste
+// wird zu einer eigenen Zeile im Ergebnis. Das ist nuetzlich, wenn man mit
+// Listenwerten arbeitet oder mehrere Werte auf einmal verarbeiten will,
+// ohne sie einzeln einzutippen.
+// UNWIND funktioniert wie ein "foreach" in Programmiersprachen: fuer jedes
+// Element in der Liste wird der restliche Query einmal ausgefuehrt.
+// Typischer Anwendungsfall: Bulk-Lookups — man hat eine Liste von Namen/IDs
+// und will fuer jedes Element etwas nachschlagen.
+
+// Beispiel: Aus einer vordefinierten Liste von Filmtiteln alle passenden
+//           Knoten mit ihrer Bewertung nachschlagen
+UNWIND ["Oppenheimer", "Parasite", "Dune: Part Two"] AS gesuchter_titel
+MATCH (f:Film {titel: gesuchter_titel})
+RETURN f.titel, f.bewertung, f.genre
+ORDER BY f.bewertung DESC
+
+// Erklaerung des Beispiels:
+// 1. UNWIND nimmt die Liste ["Oppenheimer", "Parasite", "Dune: Part Two"] und
+//    erzeugt fuer jeden Eintrag eine eigene "Zeile" — die Variable gesuchter_titel
+//    nimmt nacheinander die Werte "Oppenheimer", "Parasite", "Dune: Part Two" an.
+// 2. MATCH (f:Film {titel: gesuchter_titel}) sucht fuer jeden Titel den
+//    passenden Film-Knoten in der Datenbank.
+// 3. RETURN gibt Titel, Bewertung und Genre zurueck.
+// Ohne UNWIND muesste man drei separate Abfragen schreiben oder einen langen
+// WHERE ... OR ... OR ...-Ausdruck verwenden.

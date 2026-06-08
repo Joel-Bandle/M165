@@ -1,0 +1,78 @@
+// KN-N-02 Teil B: Daten abfragen
+
+// =============================================
+// OPTIONAL MATCH erklaeren
+// =============================================
+
+// Gegeben:
+MATCH (n)
+OPTIONAL MATCH (n)-[r]->(m)
+RETURN n, r, m
+
+// Erklaerung:
+// - MATCH (n) findet ALLE Knoten in der Datenbank, unabhaengig vom Label.
+// - OPTIONAL MATCH (n)-[r]->(m) versucht fuer jeden gefundenen Knoten n eine
+//   ausgehende Beziehung r zu einem Zielknoten m zu finden.
+// - Wichtiger Unterschied zu einem normalen MATCH:
+//   Wenn ein Knoten KEINE ausgehende Beziehung hat (z.B. eine Plattform, auf die
+//   nur Kanten zeigen, aber von der keine ausgehen), wird der Knoten trotzdem
+//   im Ergebnis behalten — r und m sind dann einfach NULL.
+// - Bei einem normalen MATCH wuerde dieser Knoten komplett aus dem Ergebnis
+//   herausfallen, weil die Bedingung nicht erfuellt ist.
+// - OPTIONAL MATCH entspricht damit einem LEFT JOIN in SQL:
+//   Alle Zeilen der linken Seite bleiben erhalten, rechte Seite ist NULL wenn
+//   keine Uebereinstimmung gefunden wird.
+
+
+// =============================================
+// Q1: Alle Filme eines bestimmten Genres mit Bewertung ueber einem Schwellwert
+//     (WHERE auf Knoten-Attributen, mehrere Bedingungen)
+// =============================================
+// Szenario: Eine Filmkritiker-App will alle hoch bewerteten Thriller und
+// Dramen anzeigen (Bewertung > 8.0), sortiert nach Bewertung.
+
+MATCH (f:Film)
+WHERE (f.genre = "Thriller" OR f.genre = "Historisches Drama") AND f.bewertung > 8.0
+RETURN f.titel, f.genre, f.bewertung, f.erscheinungsjahr
+ORDER BY f.bewertung DESC
+
+
+// =============================================
+// Q2: Welche Schauspieler spielen in einem Film mit, und was war ihre Gage?
+//     (WHERE auf Kanten-Attribut + Knotenattribut)
+// =============================================
+// Szenario: Eine Produktionsfirma moechte wissen, welche Schauspieler in Filmen
+// mit Gage ueber 10 Mio. mitgespielt haben und wie viel sie verdient haben.
+
+MATCH (s:Schauspieler)-[sp:SPIELT_IN]->(f:Film)
+WHERE sp.gage > 10000000
+RETURN s.name AS schauspieler, f.titel AS film, sp.rolle AS rolle, sp.gage AS gage
+ORDER BY sp.gage DESC
+
+
+// =============================================
+// Q3: Auf welchen Plattformen sind Filme eines bestimmten Regisseurs verfuegbar?
+//     (Multi-Hop-Traversal ueber 3 Knoten)
+// =============================================
+// Szenario: Ein Nutzer sucht alle Plattformen, auf denen Filme von
+// Christopher Nolan oder Denis Villeneuve verfuegbar sind.
+
+MATCH (r:Regisseur)-[:INSZENIERT]->(f:Film)-[:VERFUEGBAR_AUF]->(p:Plattform)
+WHERE r.name = "Christopher Nolan" OR r.name = "Denis Villeneuve"
+RETURN r.name AS regisseur, f.titel AS film, p.name AS plattform, p.preis AS preis_chf
+ORDER BY r.name, p.preis
+
+
+// =============================================
+// Q4: Schauspieler, die in mehr als einem Film mitspielen — mit allen Rollen
+//     (Traversal + aggregierte Beziehungen)
+// =============================================
+// Szenario: Das Casting-Team will wissen, welche Schauspieler in der Datenbank
+// mehrere Rollen haben, und alle ihre Filme und Rollen sehen.
+
+MATCH (s:Schauspieler)-[sp:SPIELT_IN]->(f:Film)
+WITH s, count(sp) AS anzahl_rollen
+WHERE anzahl_rollen > 1
+MATCH (s)-[sp2:SPIELT_IN]->(f2:Film)
+RETURN s.name AS schauspieler, anzahl_rollen, f2.titel AS film, sp2.rolle AS rolle
+ORDER BY s.name
